@@ -1,0 +1,19 @@
+version: '3'
+services:
+  media:
+    build: 
+      context: ./media
+    ports:
+      - "8001:80"
+
+  location:
+    build: 
+      context: ./location
+    ports:
+      - "8002:80"
+
+  interactionlog:
+    build: 
+      context: ./interactionlog
+    ports:
+      - "8003:80"
