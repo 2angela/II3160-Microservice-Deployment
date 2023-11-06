@@ -8,8 +8,8 @@ RUN pip install uvicorn
 
 COPY . /app/
 
-EXPOSE 80
+EXPOSE 8000
 
-ENV NAME media
+ENV NAME main
 
-CMD [ "uvicorn", "media:app", "--host", "0.0.0.0", "--port", "80" ]
+CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000" ]

@@ -19,12 +19,12 @@ with open(json_filename,"r") as read_file:
 
 app = FastAPI()
 
-@app.get('/media')
+@app.get('/')
 async def read_all_media():
 	return data['media']
 
 
-@app.get('/media/{item_id}')
+@app.get('/{item_id}')
 async def read_media(item_id: int):
 	for media_item in data['media']:
 		print(media_item)
@@ -34,7 +34,7 @@ async def read_media(item_id: int):
 		status_code=404, detail=f'media not found'
 	)
 
-@app.post('/media')
+@app.post('/')
 async def add_media(item: Item):
 	item_dict = item.dict()
 	item_found = False
@@ -53,7 +53,7 @@ async def add_media(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.put('/media')
+@app.put('/')
 async def update_media(item: Item):
 	item_dict = item.dict()
 	item_found = False
@@ -72,7 +72,7 @@ async def update_media(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.delete('/media/{item_id}')
+@app.delete('/{item_id}')
 async def delete_media(item_id: int):
 
 	item_found = False
