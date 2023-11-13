@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException
 import json
 from pydantic import BaseModel
+import OAuth
 
 
 class Item(BaseModel):
@@ -15,15 +16,15 @@ json_filename="location.json"
 with open(json_filename,"r") as read_file:
 	data = json.load(read_file)
 
-app = FastAPI()
+router = APIRouter()
 
-@app.get('/')
-async def read_all_location():
+@router.get('/location')
+async def read_all_location(current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
 	return data['location']
 
 
-@app.get('/{item_id}')
-async def read_location(item_id: int):
+@router.get('/location/{item_id}')
+async def read_location(item_id: int, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
 	for location_item in data['location']:
 		print(location_item)
 		if location_item['location_id'] == item_id:
@@ -32,8 +33,8 @@ async def read_location(item_id: int):
 		status_code=404, detail=f'location not found'
 	)
 
-@app.post('/')
-async def add_location(item: Item):
+@router.post('/location')
+async def add_location(item: Item, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
 	for location_item in data['location']:
@@ -51,8 +52,8 @@ async def add_location(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.put('/')
-async def update_location(item: Item):
+@router.put('/location')
+async def update_location(item: Item, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
 	for location_idx, location_item in enumerate(data['location']):
@@ -70,8 +71,8 @@ async def update_location(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.delete('/{item_id}')
-async def delete_location(item_id: int):
+@router.delete('/location/{item_id}')
+async def delete_location(item_id: int, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
 
 	item_found = False
 	for location_idx, location_item in enumerate(data['location']):
