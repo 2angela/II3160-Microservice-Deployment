@@ -3,7 +3,6 @@ import json
 from pydantic import BaseModel
 import OAuth
 
-
 class Item(BaseModel):
 	media_id: int
 	media_type: str
