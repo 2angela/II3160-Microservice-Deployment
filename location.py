@@ -17,12 +17,12 @@ with open(json_filename,"r") as read_file:
 
 app = FastAPI()
 
-@app.get('/')
+@app.get('/location')
 async def read_all_location():
 	return data['location']
 
 
-@app.get('/{item_id}')
+@app.get('/location/{item_id}')
 async def read_location(item_id: int):
 	for location_item in data['location']:
 		print(location_item)
@@ -32,7 +32,7 @@ async def read_location(item_id: int):
 		status_code=404, detail=f'location not found'
 	)
 
-@app.post('/')
+@app.post('/location')
 async def add_location(item: Item):
 	item_dict = item.dict()
 	item_found = False
@@ -51,7 +51,7 @@ async def add_location(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.put('/')
+@app.put('/location')
 async def update_location(item: Item):
 	item_dict = item.dict()
 	item_found = False
@@ -70,7 +70,7 @@ async def update_location(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.delete('/{item_id}')
+@app.delete('/location/{item_id}')
 async def delete_location(item_id: int):
 
 	item_found = False

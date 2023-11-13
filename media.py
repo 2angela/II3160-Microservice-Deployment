@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import json
 from pydantic import BaseModel
-
+import OAuth
 
 class Item(BaseModel):
 	media_id: int
@@ -17,14 +17,30 @@ json_filename="media.json"
 with open(json_filename,"r") as read_file:
 	data = json.load(read_file)
 
-app = FastAPI()
+app = FastAPI(debug=True)
 
-@app.get('/')
-async def read_all_media():
+@app.post("/token", response_model=OAuth.Token)
+async def login_for_access_token(form_data: OAuth.OAuth2PasswordRequestForm = OAuth.Depends()):
+    user = OAuth.authenticate_user(OAuth.db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=OAuth.status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
+    access_token_expires = OAuth.timedelta(minutes=OAuth.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = OAuth.create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.get("/users/me/", response_model=OAuth.User)
+async def read_users_me(current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+    return current_user
+
+@app.get("/users/me/items", response_model=OAuth.User)
+async def read_own_items(current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+    return [{"item_id": 1, "owner": current_user}]
+
+@app.get('/users/me/media', response_model=OAuth.User)
+async def read_all_media(current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
 	return data['media']
 
-
-@app.get('/{item_id}')
+@app.get('/media/{item_id}')
 async def read_media(item_id: int):
 	for media_item in data['media']:
 		print(media_item)
@@ -34,7 +50,7 @@ async def read_media(item_id: int):
 		status_code=404, detail=f'media not found'
 	)
 
-@app.post('/')
+@app.post('/media')
 async def add_media(item: Item):
 	item_dict = item.dict()
 	item_found = False
@@ -53,7 +69,7 @@ async def add_media(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.put('/')
+@app.put('/media')
 async def update_media(item: Item):
 	item_dict = item.dict()
 	item_found = False
@@ -72,7 +88,7 @@ async def update_media(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.delete('/{item_id}')
+@app.delete('/media/{item_id}')
 async def delete_media(item_id: int):
 
 	item_found = False

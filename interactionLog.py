@@ -17,12 +17,12 @@ with open(json_filename,"r") as read_file:
 
 app = FastAPI()
 
-@app.get('/')
+@app.get('/interactionLog')
 async def read_all_interactionLog():
 	return data['interactionLog']
 
 
-@app.get('/{item_id}')
+@app.get('/interactionLog/{item_id}')
 async def read_interactionLog(item_id: int):
 	for interactionLog_item in data['interactionLog']:
 		print(interactionLog_item)
@@ -32,7 +32,7 @@ async def read_interactionLog(item_id: int):
 		status_code=404, detail=f'interactionLog not found'
 	)
 
-@app.post('/')
+@app.post('/interactionLog')
 async def add_interactionLog(item: Item):
 	item_dict = item.dict()
 	item_found = False
@@ -51,7 +51,7 @@ async def add_interactionLog(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.put('/')
+@app.put('/interactionLog')
 async def update_interactionLog(item: Item):
 	item_dict = item.dict()
 	item_found = False
@@ -70,7 +70,7 @@ async def update_interactionLog(item: Item):
 		status_code=404, detail=f'item not found'
 	)
 
-@app.delete('/{item_id}')
+@app.delete('/interactionLog/{item_id}')
 async def delete_interactionLog(item_id: int):
 
 	item_found = False
