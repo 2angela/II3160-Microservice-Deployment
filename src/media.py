@@ -1,18 +1,17 @@
 from fastapi import APIRouter, HTTPException
 import json
 from pydantic import BaseModel
-import OAuth
+import auth
 
 class Item(BaseModel):
 	media_id: int
-	media_type: str
 	title: str
-	description: str
-	file_path: str
 	location_id: int
-	keywords: str
+	image_url: str
+	description: str
+	tags: str
 
-json_filename="media.json"
+json_filename="data/media.json"
 
 with open(json_filename,"r") as read_file:
 	data = json.load(read_file)
@@ -20,12 +19,12 @@ with open(json_filename,"r") as read_file:
 router = APIRouter()
 
 @router.get('/media')
-async def read_all_media(current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def read_all_media(current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	return data['media']
 
 
 @router.get('/media/{item_id}')
-async def read_media(item_id: int, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def read_media(item_id: int, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	for media_item in data['media']:
 		print(media_item)
 		if media_item['media_id'] == item_id:
@@ -35,7 +34,7 @@ async def read_media(item_id: int, current_user: OAuth.User = OAuth.Depends(OAut
 	)
 
 @router.post('/media')
-async def add_media(item: Item, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def add_media(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
 	for media_item in data['media']:
@@ -54,7 +53,7 @@ async def add_media(item: Item, current_user: OAuth.User = OAuth.Depends(OAuth.g
 	)
 
 @router.put('/media')
-async def update_media(item: Item, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def update_media(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
 	for media_idx, media_item in enumerate(data['media']):
@@ -73,7 +72,7 @@ async def update_media(item: Item, current_user: OAuth.User = OAuth.Depends(OAut
 	)
 
 @router.delete('/media/{item_id}')
-async def delete_media(item_id: int, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def delete_media(item_id: int, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 
 	item_found = False
 	for media_idx, media_item in enumerate(data['media']):

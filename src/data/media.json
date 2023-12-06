@@ -1,0 +1,26 @@
+{"media": [
+	{"media_id": 1,
+	"title": "Panoramic Room",
+	"location_id": 4,
+	"image_url": "https://i.ibb.co/HDJ881z/shot-panoramic-composition-bedroom.jpg",
+	"description": "A view of our luxurious room.",
+	"tags": "luxury, room, panoramic, view"
+	},
+
+	{"media_id": 2,
+	"title": "Pool Area Tour",
+	"location_id": 5,
+	"image_url": "https://i.ibb.co/7Rgpcsf/poolarea.jpg",
+	"description": "Virtual view of our hotel's pool area.",
+	"tags": "pool, area, tour, amenities"
+	},
+
+	{"media_id": 3,
+	"title": "Lobby Entrance",
+	"location_id": 1,
+	"image_url": "https://i.ibb.co/wM6yTtJ/2150683455.jpg",
+	"description": "View of the elegant lobby entrance.",
+	"tags": "lobby, entrance, elegant"
+	}
+]
+}

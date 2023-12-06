@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 import json
 from pydantic import BaseModel
-import OAuth
+import auth
 
 class Item(BaseModel):
 	interactionLog_id: int
@@ -11,7 +11,7 @@ class Item(BaseModel):
 	message: str
 	interaction_time: str
 
-json_filename="interactionLog.json"
+json_filename="data/interactionLog.json"
 
 with open(json_filename,"r") as read_file:
 	data = json.load(read_file)
@@ -19,12 +19,12 @@ with open(json_filename,"r") as read_file:
 router = APIRouter()
 
 @router.get('/interactionLog')
-async def read_all_interactionLog(current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def read_all_interactionLog(current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	return data['interactionLog']
 
 
 @router.get('/interactionLog/{item_id}')
-async def read_interactionLog(item_id: int, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def read_interactionLog(item_id: int, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	for interactionLog_item in data['interactionLog']:
 		print(interactionLog_item)
 		if interactionLog_item['interactionLog_id'] == item_id:
@@ -34,7 +34,7 @@ async def read_interactionLog(item_id: int, current_user: OAuth.User = OAuth.Dep
 	)
 
 @router.post('/interactionLog')
-async def add_interactionLog(item: Item, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def add_interactionLog(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
 	for interactionLog_item in data['interactionLog']:
@@ -53,7 +53,7 @@ async def add_interactionLog(item: Item, current_user: OAuth.User = OAuth.Depend
 	)
 
 @router.put('/interactionLog')
-async def update_interactionLog(item: Item, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def update_interactionLog(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
 	for interactionLog_idx, interactionLog_item in enumerate(data['interactionLog']):
@@ -72,7 +72,7 @@ async def update_interactionLog(item: Item, current_user: OAuth.User = OAuth.Dep
 	)
 
 @router.delete('/interactionLog/{item_id}')
-async def delete_interactionLog(item_id: int, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def delete_interactionLog(item_id: int, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 
 	item_found = False
 	for interactionLog_idx, interactionLog_item in enumerate(data['interactionLog']):

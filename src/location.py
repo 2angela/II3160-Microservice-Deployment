@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 import json
 from pydantic import BaseModel
-import OAuth
+import auth
 
 
 class Item(BaseModel):
@@ -11,7 +11,7 @@ class Item(BaseModel):
 	cardinal_direction: str
 	floor: str
 
-json_filename="location.json"
+json_filename="data/location.json"
 
 with open(json_filename,"r") as read_file:
 	data = json.load(read_file)
@@ -19,12 +19,12 @@ with open(json_filename,"r") as read_file:
 router = APIRouter()
 
 @router.get('/location')
-async def read_all_location(current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def read_all_location(current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	return data['location']
 
 
 @router.get('/location/{item_id}')
-async def read_location(item_id: int, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def read_location(item_id: int, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	for location_item in data['location']:
 		print(location_item)
 		if location_item['location_id'] == item_id:
@@ -34,7 +34,7 @@ async def read_location(item_id: int, current_user: OAuth.User = OAuth.Depends(O
 	)
 
 @router.post('/location')
-async def add_location(item: Item, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def add_location(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
 	for location_item in data['location']:
@@ -53,7 +53,7 @@ async def add_location(item: Item, current_user: OAuth.User = OAuth.Depends(OAut
 	)
 
 @router.put('/location')
-async def update_location(item: Item, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def update_location(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
 	for location_idx, location_item in enumerate(data['location']):
@@ -72,7 +72,7 @@ async def update_location(item: Item, current_user: OAuth.User = OAuth.Depends(O
 	)
 
 @router.delete('/location/{item_id}')
-async def delete_location(item_id: int, current_user: OAuth.User = OAuth.Depends(OAuth.get_current_active_user)):
+async def delete_location(item_id: int, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 
 	item_found = False
 	for location_idx, location_item in enumerate(data['location']):

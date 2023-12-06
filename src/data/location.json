@@ -1,17 +1,17 @@
 {"location": [
-	{"location_id": 910030, 
+	{"location_id": 1, 
 	"area_name":"Lobby Guest Area 1", 
 	"description": "The Main Lobby Guest Area on the first floor welcomes you with an atmosphere of elegance and comfort.", 
 	"cardinal_direction": "EAST", 
 	"floor": "1st"},
 
-	{"location_id": 910031, 
+	{"location_id": 2, 
 	"area_name":"Lobby Guest Area 2", 
 	"description": "The Lobby Guest Area on the second floor provides you a space to rest and relax with the amazing view of the ocean.", 
 	"cardinal_direction": "WEST", 
 	"floor": "2nd"},
 	
-	{"location_id": 910032, 
+	{"location_id": 3, 
 	"area_name":"Lobby Guest Area 3", 
 	"description": "The Lobby Guest Area on the third floor provides you a space to rest and relax.", 
 	"cardinal_direction": "SOUTH EAST", 

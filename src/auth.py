@@ -5,20 +5,26 @@ from datetime import datetime, timedelta
 from jose import JWTError
 import jwt
 from passlib.context import CryptContext
+import json
 
 SECRET_KEY = "420b9c45a5054d8583d6aad7bc1fbafe"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-db = {
-    "angela" : {
-        "username": "angela",
-        "full_name": "Angela Geraldine",
-        "email": "18221158@mahasiswa.itb.ac.id",
-        "hashed_password": "$2b$12$NE42QFbFRt0E3xO/bXs20edW8aR6RcLLBOBD6.P/3KRBQb8Rk2fty",
-        "disabled": False
-    }
-}
+json_filename="data/user.json"
+
+with open(json_filename,"r") as read_file:
+	db = json.load(read_file)
+
+# db = {
+#     "angela" : {
+#         "username": "angela",
+#         "full_name": "Angela Geraldine",
+#         "email": "18221158@mahasiswa.itb.ac.id",
+#         "hashed_password": "$2b$12$NE42QFbFRt0E3xO/bXs20edW8aR6RcLLBOBD6.P/3KRBQb8Rk2fty",
+#         "disabled": False
+#     }
+# }
 
 class Token(BaseModel):
     access_token: str
@@ -28,9 +34,9 @@ class TokenData(BaseModel):
     username : str or None = None
 
 class User(BaseModel):
+    user_id: int
     username: str
-    email: str or None = None
-    full_name: str or None = None
+    user_type: str
     disabled: bool or None = None
 
 class UserInDB(User):
@@ -46,9 +52,12 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 def get_user(db, username: str):
-    if username in db:
-        user_data = db[username]
-        return UserInDB(**user_data)
+    # if username in db["user"]:
+    #     user_data = db["user"][user_id + 1]
+    #     return UserInDB(**user_data)
+    for user_data in db["user"]:
+        if user_data["username"] == username:
+            return UserInDB(**user_data)
     
 def authenticate_user(db, username: str, password: str):
     user = get_user(db, username)
