@@ -5,26 +5,15 @@ from datetime import datetime, timedelta
 from jose import JWTError
 import jwt
 from passlib.context import CryptContext
-import json
+from pymongo import MongoClient
+
+client = MongoClient("mongodb+srv://angela:C6b8KUv0UwbKDwr5@cluster0.tkkxnwj.mongodb.net/?retryWrites=true&w=majority")
+db = client["tst"]
+collection = db["user"]
 
 SECRET_KEY = "420b9c45a5054d8583d6aad7bc1fbafe"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-json_filename="data/user.json"
-
-with open(json_filename,"r") as read_file:
-	db = json.load(read_file)
-
-# db = {
-#     "angela" : {
-#         "username": "angela",
-#         "full_name": "Angela Geraldine",
-#         "email": "18221158@mahasiswa.itb.ac.id",
-#         "hashed_password": "$2b$12$NE42QFbFRt0E3xO/bXs20edW8aR6RcLLBOBD6.P/3KRBQb8Rk2fty",
-#         "disabled": False
-#     }
-# }
 
 class Token(BaseModel):
     access_token: str
@@ -52,18 +41,13 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 def get_user(db, username: str):
-    # if username in db["user"]:
-    #     user_data = db["user"][user_id + 1]
-    #     return UserInDB(**user_data)
-    for user_data in db["user"]:
-        if user_data["username"] == username:
-            return UserInDB(**user_data)
+    return db.find_one({"username": username})
     
 def authenticate_user(db, username: str, password: str):
     user = get_user(db, username)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user["hashed_password"]):
         return False
     
     return user
@@ -98,7 +82,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return user
 
 async def get_current_active_user(current_user: UserInDB = Depends(get_current_user)):
-    if current_user.disabled:
+    if current_user["disabled"]:
         raise HTTPException(status_code=400, detail="Inactive user")
     
     return current_user
@@ -107,11 +91,11 @@ router = APIRouter()
 
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(db, form_data.username, form_data.password)
+    user = authenticate_user(collection, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": user["username"]}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/users/me/", response_model=User)
