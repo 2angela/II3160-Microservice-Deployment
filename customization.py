@@ -22,11 +22,11 @@ username = "angela"
 password = "admin200"
 
 class Ingredient(BaseModel):
-    custom_id: int
     ingredient_id: int
     adjusted_quantity: float
 
 class Item(BaseModel):
+    custom_id: int
     Ingredients: List[Ingredient]
     order_id: int
 
