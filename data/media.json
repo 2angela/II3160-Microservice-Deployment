@@ -1,7 +1,7 @@
 {"media": [
 	{"media_id": 1,
 	"title": "Panoramic Room",
-	"location_id": 4,
+	"location_id": 2,
 	"image_url": "https://i.ibb.co/HDJ881z/shot-panoramic-composition-bedroom.jpg",
 	"description": "A view of our luxurious room.",
 	"tags": "luxury, room, panoramic, view"
@@ -9,7 +9,7 @@
 
 	{"media_id": 2,
 	"title": "Pool Area Tour",
-	"location_id": 5,
+	"location_id": 3,
 	"image_url": "https://i.ibb.co/7Rgpcsf/poolarea.jpg",
 	"description": "Virtual view of our hotel's pool area.",
 	"tags": "pool, area, tour, amenities"
