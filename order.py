@@ -24,6 +24,7 @@ class Item(BaseModel):
     order_id: int
     customer_id: int
     menu_id: int
+    menu_quantity: int
 
 def get_access_token():
     login_payload = {"username": username, "password": password}
