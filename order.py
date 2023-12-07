@@ -6,7 +6,7 @@ import auth
 from pydantic import BaseModel
 
 app = FastAPI()
-router = APIRouter()
+router = APIRouter(tags=["Order"])
 
 mongo_connection_string = "mongodb+srv://angela:C6b8KUv0UwbKDwr5@cluster0.tkkxnwj.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(mongo_connection_string)
@@ -39,7 +39,6 @@ def store_item(item_dict: dict):
 
 @router.post("/order")
 async def add_order(item: Item, current_user: auth.User = Depends(auth.get_current_active_user)):
-    # Convert the Pydantic model to a dictionary
     item_dict = item.dict()
 
     url = "http://localhost:8888/order"

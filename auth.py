@@ -8,8 +8,8 @@ from passlib.context import CryptContext
 from pymongo import MongoClient
 
 client = MongoClient("mongodb+srv://angela:C6b8KUv0UwbKDwr5@cluster0.tkkxnwj.mongodb.net/?retryWrites=true&w=majority")
-db = client["tst"]
-collection = db["user"]
+database = client["tst"]
+collection = database["user"]
 
 SECRET_KEY = "420b9c45a5054d8583d6aad7bc1fbafe"
 ALGORITHM = "HS256"
@@ -75,7 +75,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     except JWTError:
         raise credential_exception
     
-    user = get_user(db, username=token_data.username)
+    user = get_user(collection, username=token_data.username)
     if user is None:
         raise credential_exception
 
@@ -87,7 +87,7 @@ async def get_current_active_user(current_user: UserInDB = Depends(get_current_u
     
     return current_user
 
-router = APIRouter()
+router = APIRouter(tags=["Auth"])
 
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):

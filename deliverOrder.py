@@ -13,7 +13,7 @@ class Item(BaseModel):
 	custom_id: int
 	location_id: int
 
-router = APIRouter()
+router = APIRouter(tags=["Deliver Order"])
 
 def convert_objectid(object):
     object['_id'] = str(object['_id'])
@@ -41,12 +41,12 @@ async def add_deliverOrder(item: Item, current_user: auth.User = auth.Depends(au
     collection.insert_one(item_dict)
     return convert_objectid(item_dict)
 
-@router.put('/deliverOrder/{item_id}')
-async def update_deliverOrder(item_id: int, item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
+@router.put('/deliverOrder')
+async def update_deliverOrder(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
     item_dict = item.dict()
-    existing_item = collection.find_one({"deliverOrder_id": item_id})
+    existing_item = collection.find_one({"deliverOrder_id": item.deliverOrder_id})
     if existing_item:
-        collection.update_one({"deliverOrder_id": item_id}, {"$set": item_dict})
+        collection.update_one({"deliverOrder_id": item.deliverOrder_id}, {"$set": item_dict})
         return "Updated"
     else:
         raise HTTPException(status_code=404, detail='InteractionLog ID not found')

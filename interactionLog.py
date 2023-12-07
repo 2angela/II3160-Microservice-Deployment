@@ -15,7 +15,7 @@ class Item(BaseModel):
 	message: str
 	interaction_time: str
 
-router = APIRouter()
+router = APIRouter(tags=["Interaction Log"])
 
 def convert_objectid(object):
     object['_id'] = str(object['_id'])
@@ -43,12 +43,12 @@ async def add_interactionLog(item: Item, current_user: auth.User = auth.Depends(
     collection.insert_one(item_dict)
     return convert_objectid(item_dict)
 
-@router.put('/interactionLog/{item_id}')
-async def update_interactionLog(item_id: int, item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
+@router.put('/interactionLog')
+async def update_interactionLog(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
     item_dict = item.dict()
-    existing_item = collection.find_one({"interactionLog_id": item_id})
+    existing_item = collection.find_one({"interactionLog_id": item.interactionLog_id})
     if existing_item:
-        collection.update_one({"interactionLog_id": item_id}, {"$set": item_dict})
+        collection.update_one({"interactionLog_id": item.interactionLog_id}, {"$set": item_dict})
         return "Updated"
     else:
         raise HTTPException(status_code=404, detail='InteractionLog ID not found')

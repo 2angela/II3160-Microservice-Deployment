@@ -14,7 +14,7 @@ class Item(BaseModel):
 	cardinal_direction: str
 	floor: str
 
-router = APIRouter()
+router = APIRouter(tags=["Location"])
 
 def convert_objectid(object):
     object['_id'] = str(object['_id'])
@@ -42,12 +42,12 @@ async def add_location(item: Item, current_user: auth.User = auth.Depends(auth.g
     collection.insert_one(item_dict)
     return convert_objectid(item_dict)
 
-@router.put('/location/{item_id}')
-async def update_location(item_id: int, item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
+@router.put('/location')
+async def update_location(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
     item_dict = item.dict()
-    existing_item = collection.find_one({"location_id": item_id})
+    existing_item = collection.find_one({"location_id": item.location_id})
     if existing_item:
-        collection.update_one({"location_id": item_id}, {"$set": item_dict})
+        collection.update_one({"location_id": item.location_id}, {"$set": item_dict})
         return "Updated"
     else:
         raise HTTPException(status_code=404, detail='Location ID not found')

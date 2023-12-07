@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 import auth
 
 app = FastAPI()
-router = APIRouter()
+router = APIRouter(tags=["Menu, Ingredients, Composition"])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -78,4 +78,22 @@ async def get_all_ingredients(current_user: auth.User = Depends(auth.get_current
 
     except Exception as e:
         print(f"Error in get_all_ingredients: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+    
+@router.get("/composition")
+async def get_all_composition(current_user: auth.User = Depends(auth.get_current_active_user)):
+    try:
+        url = f"{delightcook_api_url}/composition"
+        
+        headers = {'Authorization': f'Bearer {get_access_token()}'}
+        response = requests.get(url, headers=headers)
+        api_data = response.json()
+
+        if isinstance(api_data, list):
+            return api_data
+        else:
+            raise ValueError("Unexpected API response format")
+
+    except Exception as e:
+        print(f"Error in get_all_composition: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal Server Error")

@@ -18,7 +18,7 @@ class Item(BaseModel):
 class UserInDB(Item):
     hashed_password: str
 
-router = APIRouter()
+router = APIRouter(tags=["User"])
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -54,14 +54,14 @@ async def add_user(item: Item, current_user: auth.User = auth.Depends(auth.get_c
 	return convert_objectid(item_dict)
 
 @router.put('/user')
-async def update_user(item_id: int, item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
+async def update_user(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
 	item_dict = item.dict()
-	existing_item = collection.find_one({"user_id": item_id})
+	existing_item = collection.find_one({"user_id": item.user_id})
 	if existing_item:
 		hashed_password = get_password_hash(item_dict['password'])
 		item_dict['hashed_password'] = hashed_password
 		del item_dict['password']
-		collection.update_one({"user_id": item_id}, {"$set": item_dict})
+		collection.update_one({"user_id": item.user_id}, {"$set": item_dict})
 		return "Updated"
 	else:
 		raise HTTPException(status_code=404, detail='User ID not found')

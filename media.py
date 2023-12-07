@@ -15,7 +15,7 @@ class Item(BaseModel):
     description: str
     tags: str
 
-router = APIRouter()
+router = APIRouter(tags=["Media"])
 
 def convert_objectid(object):
     object['_id'] = str(object['_id'])
@@ -43,12 +43,12 @@ async def add_media(item: Item, current_user: auth.User = auth.Depends(auth.get_
     collection.insert_one(item_dict)
     return convert_objectid(item_dict)
 
-@router.put('/media/{item_id}')
-async def update_media(item_id: int, item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
+@router.put('/media')
+async def update_media(item: Item, current_user: auth.User = auth.Depends(auth.get_current_active_user)):
     item_dict = item.dict()
-    existing_item = collection.find_one({"media_id": item_id})
+    existing_item = collection.find_one({"media_id": item.media_id})
     if existing_item:
-        collection.update_one({"media_id": item_id}, {"$set": item_dict})
+        collection.update_one({"media_id": item.media_id}, {"$set": item_dict})
         return "Updated"
     else:
         raise HTTPException(status_code=404, detail='Media ID not found')

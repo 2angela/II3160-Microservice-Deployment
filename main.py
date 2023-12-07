@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import media, location, interactionLog, auth, user, composition, menu_ingredients, customization, deliverOrder, order
+import media, location, interactionLog, auth, user, menu_ingredients_composition, customization, order, deliverOrder
 import uvicorn
 
 app = FastAPI()
@@ -9,11 +9,10 @@ app.include_router(media.router)
 app.include_router(location.router)
 app.include_router(interactionLog.router)
 app.include_router(user.router)
-app.include_router(composition.router)
-app.include_router(menu_ingredients.router)
+app.include_router(menu_ingredients_composition.router)
 app.include_router(customization.router)
-app.include_router(deliverOrder.router)
 app.include_router(order.router)
+app.include_router(deliverOrder.router)
 
 
 if __name__ == "__main__":

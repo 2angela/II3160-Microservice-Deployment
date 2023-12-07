@@ -4,9 +4,10 @@ from pymongo import MongoClient
 from fastapi.security import OAuth2PasswordBearer
 import auth
 from pydantic import BaseModel
+from typing import List
 
 app = FastAPI()
-router = APIRouter()
+router = APIRouter(tags=["Customization"])
 
 mongo_connection_string = "mongodb+srv://angela:C6b8KUv0UwbKDwr5@cluster0.tkkxnwj.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(mongo_connection_string)
@@ -20,10 +21,14 @@ delightcook_api_url = "http://localhost:8888"
 username = "angela"
 password = "admin200"
 
-class Item(BaseModel):
+class Ingredient(BaseModel):
     custom_id: int
     ingredient_id: int
     adjusted_quantity: float
+
+class Item(BaseModel):
+    Ingredients: List[Ingredient]
+    order_id: int
 
 def get_access_token():
     login_payload = {"username": username, "password": password}
@@ -39,7 +44,6 @@ def store_item(item_dict: dict):
 
 @router.post("/meal_customization")
 async def add_meal_customization(item: Item, current_user: auth.User = Depends(auth.get_current_active_user)):
-    # Convert the Pydantic model to a dictionary
     item_dict = item.dict()
 
     url = "http://localhost:8888/customization"
