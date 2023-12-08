@@ -16,10 +16,10 @@ collection = db["meal_customization"]
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-delightcook_api_url = "http://localhost:8888"
+delightcook_api_url = "http://backenddelightcook.dtemg6gpcec2b0cy.southeastasia.azurecontainer.io"
 
-username = "angel"
-password = "angela200"
+username = "TST"
+password = "gws"
 
 class Ingredient(BaseModel):
     ingredient_id: int
