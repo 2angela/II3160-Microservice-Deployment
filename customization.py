@@ -46,7 +46,7 @@ def store_item(item_dict: dict):
 async def add_meal_customization(item: Item, current_user: auth.User = Depends(auth.get_current_active_user)):
     item_dict = item.dict()
 
-    url = "http://localhost:8888/customization"
+    url = "http://backenddelightcook.dtemg6gpcec2b0cy.southeastasia.azurecontainer.io/customization"
     headers = {"Authorization": f"Bearer {get_access_token()}"}
     response = requests.post(url, json=item_dict, headers=headers)
 
