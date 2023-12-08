@@ -10,6 +10,7 @@ RUN pip install python-jose
 RUN pip install PyJWT
 RUN pip install python-multipart
 RUN pip install pymongo
+RUN pip install requests
 
 COPY . /app/
 
