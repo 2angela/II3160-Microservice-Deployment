@@ -63,4 +63,4 @@ async def get_all_meal_customization(current_user: auth.User = Depends(auth.get_
     if not all_meal_customization:
         raise HTTPException(status_code=404, detail="No meal_customization found in the database")
 
-    return {"meal_customization": all_meal_customization}
+    return all_meal_customization

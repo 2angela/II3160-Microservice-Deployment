@@ -59,4 +59,4 @@ async def get_all_order(current_user: auth.User = Depends(auth.get_current_activ
     if not all_order:
         raise HTTPException(status_code=404, detail="No order found in the database")
 
-    return {"order": all_order}
+    return all_order
