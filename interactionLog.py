@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pymongo import MongoClient
 from pydantic import BaseModel
 import auth
+from datetime import datetime
 
 client = MongoClient("mongodb+srv://angela:C6b8KUv0UwbKDwr5@cluster0.tkkxnwj.mongodb.net/?retryWrites=true&w=majority")
 db = client["tst"]
@@ -12,7 +13,6 @@ class Item(BaseModel):
 	staff_id: int
 	interaction_type: str
 	message: str
-	interaction_time: str
 
 router = APIRouter(tags=["Interaction Log"])
 
@@ -43,6 +43,8 @@ async def add_interactionLog(item: Item, current_user: auth.User = auth.Depends(
     
     item_dict = item.dict()
     item_dict['interactionLog_id'] = next_id
+    interaction_time = datetime.now()
+    item_dict['interaction_time'] = interaction_time
     existing_item = collection.find_one({"interactionLog_id": item_dict['interactionLog_id']})
     if existing_item:
         return f"InteractionLog ID {item_dict['interactionLog_id']} exists."
