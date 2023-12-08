@@ -10,8 +10,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 delightcook_api_url = "http://localhost:8888"
 
-username = "angela"
-password = "admin200"
+username = "angel"
+password = "angela200"
 
 def get_access_token():
     login_payload = {"username": username, "password": password}
