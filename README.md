@@ -16,6 +16,3 @@ Layanan penyediaan dan pengantaran makanan ini menyerupai room service, tetapi p
 
 
 Layanan untuk melihat fasilitas, kamar, dan seluruh area hotel dapat dilakukan tanpa autentikasi pengguna. Akan tetapi, fasilitas untuk melakukan live chat dengan staff dan meal kit delivery service hanya dapat digunakan oleh staff yang bertugas dan tamu hotel yang sudah melakukan login ke dalam sistem dengan memasukkan username dan password yang sebelumnya telah diberikan oleh staff hotel setelah melakukan pemesanan kamar.
-
-
-Link Main Report: https://www.canva.com/design/DAF1v87rrGY/H1uiRowOkZPHFs_rYI_YqA/edit?utm_content=DAF1v87rrGY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
